@@ -23,8 +23,7 @@ storyblokInit({
   },
 });
 
-const CONTENT_VERSION =
-  process.env.NODE_ENV === "production" ? "published" : "draft";
+const CONTENT_VERSION = process.env.STORYBLOK_VERSION || "published";
 
 // ============ Jobs ============
 
