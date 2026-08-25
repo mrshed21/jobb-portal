@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { StoryblokServerRichText } from "@storyblok/react/rsc";
 import { getJob, getJobs, getDatasourceMap } from "@/lib/storyblok";
 
+// ISR — page will be revalidated every 60 seconds on new visits, instead of waiting for a manual deploy
+export const revalidate = 60;
+
 
 
 
@@ -107,7 +110,7 @@ export default async function JobDetailPage({ params }) {
 
         {content && (
           <article className="glass-card p-8 md:p-10 prose-glass">
-            <StoryblokServerRichText doc={content} />
+            <StoryblokServerRichText document={content} />
           </article>
         )}
       </div>
