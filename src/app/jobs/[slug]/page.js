@@ -1,10 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StoryblokServerRichText } from "@storyblok/react/rsc";
-import { getJob, getDatasourceMap } from "@/lib/storyblok";
+import { getJob, getJobs, getDatasourceMap } from "@/lib/storyblok";
 
 
 
+
+export async function generateStaticParams() {
+  const jobs = await getJobs();
+  return jobs.map((story) => ({
+    slug: story.slug,
+  }));
+}
+
+/**
+ * generateMetadata — SEO ديناميكي.
+ */
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const job = await getJob(slug);
@@ -24,12 +35,10 @@ export async function generateMetadata({ params }) {
 export default async function JobDetailPage({ params }) {
   const { slug } = await params;
 
-
   const [job, departmentMap] = await Promise.all([
     getJob(slug),
     getDatasourceMap("job-departments"),
   ]);
-
 
   if (!job) {
     notFound();
@@ -38,7 +47,6 @@ export default async function JobDetailPage({ params }) {
   const { title, summary, location, department, content, publishedAt } =
     job.content;
   const departmentLabel = departmentMap.get(department) || department;
-
 
   const formattedDate = publishedAt
     ? new Date(publishedAt).toLocaleDateString("sv-SE", {
@@ -51,7 +59,6 @@ export default async function JobDetailPage({ params }) {
   return (
     <main className="flex-1 px-6 py-12 md:py-20">
       <div className="mx-auto max-w-3xl">
-        {/* Back link */}
         <Link
           href="/jobs"
           className="inline-flex items-center gap-2 text-sm text-muted hover:text-white transition-colors mb-8"
@@ -62,7 +69,6 @@ export default async function JobDetailPage({ params }) {
           Tillbaka till alla tjänster
         </Link>
 
-        {/* Header card */}
         <div className="glass-card p-8 md:p-10 mb-8">
           {department && (
             <span className="glass-pill mb-5">{departmentLabel}</span>
@@ -100,7 +106,6 @@ export default async function JobDetailPage({ params }) {
           </div>
         </div>
 
-        {/* Content card */}
         {content && (
           <article className="glass-card p-8 md:p-10 prose-glass">
             <StoryblokServerRichText doc={content} />
