@@ -13,9 +13,8 @@ export async function generateStaticParams() {
   }));
 }
 
-/**
- * generateMetadata — SEO ديناميكي.
- */
+
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const job = await getJob(slug);
