@@ -101,7 +101,7 @@ body {
 }
 
 /* ============================================
-   Prose — تنسيق محتوى Rich Text
+   Prose — for rich text content (Storyblok)
    ============================================ */
 .prose-glass {
   color: var(--color-fg-muted);

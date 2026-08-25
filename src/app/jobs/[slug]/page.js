@@ -3,10 +3,8 @@ import { notFound } from "next/navigation";
 import { StoryblokServerRichText } from "@storyblok/react/rsc";
 import { getJob, getDatasourceMap } from "@/lib/storyblok";
 
-/**
- * generateMetadata — SEO ديناميكي.
- * يتم استدعاؤه على السيرفر قبل عرض الصفحة.
- */
+
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const job = await getJob(slug);
@@ -26,13 +24,13 @@ export async function generateMetadata({ params }) {
 export default async function JobDetailPage({ params }) {
   const { slug } = await params;
 
-  // نجلب الوظيفة والأقسام بالتوازي
+
   const [job, departmentMap] = await Promise.all([
     getJob(slug),
     getDatasourceMap("job-departments"),
   ]);
 
-  // إذا لم توجد الوظيفة → 404
+
   if (!job) {
     notFound();
   }
@@ -41,7 +39,7 @@ export default async function JobDetailPage({ params }) {
     job.content;
   const departmentLabel = departmentMap.get(department) || department;
 
-  // تنسيق التاريخ (سويدي)
+
   const formattedDate = publishedAt
     ? new Date(publishedAt).toLocaleDateString("sv-SE", {
         year: "numeric",

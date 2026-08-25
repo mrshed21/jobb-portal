@@ -1,6 +1,5 @@
 import { apiPlugin, storyblokInit, getStoryblokApi } from "@storyblok/react/rsc";
 
-
 storyblokInit({
   accessToken: process.env.STORYBLOK_DELIVERY_API_TOKEN,
   use: [apiPlugin],
@@ -14,15 +13,26 @@ const CONTENT_VERSION =
 
 
   
-
-export async function getJobs(params = {}) {
+export async function getJobs({ department } = {}) {
   const sbApi = getStoryblokApi();
-  const { data } = await sbApi.get("cdn/stories", {
+
+  const params = {
     starts_with: "jobs/",
     content_type: "job-post",
     version: CONTENT_VERSION,
-    ...params,
-  });
+    sort_by: "content.publishedAt:desc",
+  };
+
+
+  if (department) {
+    params.filter_query = {
+      department: {
+        in: department,
+      },
+    };
+  }
+
+  const { data } = await sbApi.get("cdn/stories", params);
   return data.stories;
 }
 
@@ -42,8 +52,6 @@ export async function getJob(slug) {
 }
 
 
-
-
 export async function getDatasourceMap(slug) {
   const sbApi = getStoryblokApi();
   const { data } = await sbApi.get("cdn/datasource_entries", {
@@ -51,4 +59,15 @@ export async function getDatasourceMap(slug) {
     version: CONTENT_VERSION,
   });
   return new Map(data.datasource_entries.map((e) => [e.value, e.name]));
+}
+
+
+
+export async function getDatasourceEntries(slug) {
+  const sbApi = getStoryblokApi();
+  const { data } = await sbApi.get("cdn/datasource_entries", {
+    datasource: slug,
+    version: CONTENT_VERSION,
+  });
+  return data.datasource_entries;
 }
