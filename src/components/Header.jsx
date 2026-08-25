@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 const NAV_ITEMS = [
   { href: "/", label: "Hem" },
   { href: "/jobs", label: "Lediga tjänster" },
+  { href: "/about-oss", label: "Om oss" },
 ];
 
 export default function Header() {
