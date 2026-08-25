@@ -1,8 +1,23 @@
 import { apiPlugin, storyblokInit, getStoryblokApi } from "@storyblok/react/rsc";
+import Hero from "@/components/blocks/Hero";
+import FeatureItem from "@/components/blocks/FeatureItem";
+import FeatureGrid from "@/components/blocks/FeatureGrid";
+import TextSection from "@/components/blocks/TextSection";
+import CtaSection from "@/components/blocks/CtaSection";
+
+// تسجيل كل block component — Storyblok يربطها بالـ technical name
+const components = {
+  hero: Hero,
+  feature_item: FeatureItem,
+  feature_grid: FeatureGrid,
+  text_section: TextSection,
+  cta_section: CtaSection,
+};
 
 storyblokInit({
   accessToken: process.env.STORYBLOK_DELIVERY_API_TOKEN,
   use: [apiPlugin],
+  components,
   apiOptions: {
     region: "eu",
   },
@@ -11,32 +26,22 @@ storyblokInit({
 const CONTENT_VERSION =
   process.env.NODE_ENV === "production" ? "published" : "draft";
 
+// ============ Jobs ============
 
-  
 export async function getJobs({ department } = {}) {
   const sbApi = getStoryblokApi();
-
   const params = {
     starts_with: "jobs/",
     content_type: "job-post",
     version: CONTENT_VERSION,
     sort_by: "content.publishedAt:desc",
   };
-
-
   if (department) {
-    params.filter_query = {
-      department: {
-        in: department,
-      },
-    };
+    params.filter_query = { department: { in: department } };
   }
-
   const { data } = await sbApi.get("cdn/stories", params);
   return data.stories;
 }
-
-
 
 export async function getJob(slug) {
   try {
@@ -51,6 +56,7 @@ export async function getJob(slug) {
   }
 }
 
+// ============ Datasources ============
 
 export async function getDatasourceMap(slug) {
   const sbApi = getStoryblokApi();
@@ -61,8 +67,6 @@ export async function getDatasourceMap(slug) {
   return new Map(data.datasource_entries.map((e) => [e.value, e.name]));
 }
 
-
-
 export async function getDatasourceEntries(slug) {
   const sbApi = getStoryblokApi();
   const { data } = await sbApi.get("cdn/datasource_entries", {
@@ -70,4 +74,34 @@ export async function getDatasourceEntries(slug) {
     version: CONTENT_VERSION,
   });
   return data.datasource_entries;
+}
+
+// ============ Generic Pages (blocks-based) ============
+
+/**
+ * جلب أي صفحة عامة (content_type: page) عبر slug.
+ */
+export async function getPage(slug) {
+  try {
+    const sbApi = getStoryblokApi();
+    const { data } = await sbApi.get(`cdn/stories/${slug}`, {
+      version: CONTENT_VERSION,
+    });
+    return data.story;
+  } catch (error) {
+    if (error?.status === 404 || error?.response?.status === 404) return null;
+    throw error;
+  }
+}
+
+/**
+ * جلب كل slugs الصفحات — للـ generateStaticParams.
+ */
+export async function getPageSlugs() {
+  const sbApi = getStoryblokApi();
+  const { data } = await sbApi.get("cdn/stories", {
+    content_type: "page",
+    version: CONTENT_VERSION,
+  });
+  return data.stories.map((s) => s.slug);
 }
