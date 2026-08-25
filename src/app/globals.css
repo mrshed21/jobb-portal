@@ -1,26 +1,101 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
+  --color-bg: #0a0e27;
+  --color-fg: #e8e9f3;
+  --color-fg-muted: #a5a8c1;
+  --color-fg-dim: #6d7192;
+  --color-accent: #8b7ff5;
+  --color-accent-hover: #a695ff;
+  --color-glass-bg: rgba(255, 255, 255, 0.05);
+  --color-glass-bg-hover: rgba(255, 255, 255, 0.09);
+  --color-glass-border: rgba(255, 255, 255, 0.10);
+  --color-glass-border-hover: rgba(255, 255, 255, 0.20);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  min-height: 100vh;
+  color: var(--color-fg);
+  background: #0a0e27;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 10%, rgba(99, 102, 241, 0.20), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 80% 90%, rgba(168, 85, 247, 0.18), transparent 60%),
+    linear-gradient(180deg, #0a0e27 0%, #14152e 50%, #1a1035 100%);
+  background-attachment: fixed;
+  font-family: var(--font-sans), Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+
+.glass-card {
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 1rem;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.glass-card-hover:hover {
+  background: var(--color-glass-bg-hover);
+  border-color: var(--color-glass-border-hover);
+  transform: translateY(-2px);
+}
+
+.glass-pill {
+  display: inline-block;
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-fg-muted);
+}
+
+.glass-button {
+  display: inline-block;
+  background: var(--color-glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-glass-border);
+  border-radius: 0.75rem;
+  padding: 0.625rem 1.5rem;
+  color: var(--color-fg);
+  font-weight: 500;
+  transition: all 200ms ease;
+}
+
+.glass-button:hover {
+  background: var(--color-glass-bg-hover);
+  border-color: var(--color-glass-border-hover);
+}
+
+.text-muted { color: var(--color-fg-muted); }
+.text-dim { color: var(--color-fg-dim); }
+
+/* Text gradient for headings */
+.text-gradient {
+  background: linear-gradient(to right, #ffffff, #c7d2fe);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Line clamp fallback (لو Tailwind's line-clamp لم يعمل) */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
