@@ -4,10 +4,7 @@ import { getPage, getPageSlugs } from "@/lib/storyblok";
 
 export const revalidate = 60;
 
-/**
- * generateStaticParams — يبني كل صفحات page مسبقاً.
- * ملاحظة: /jobs يأخذ الأولوية تلقائياً لأنه folder صريح.
- */
+
 export async function generateStaticParams() {
   const slugs = await getPageSlugs();
   return slugs.map((slug) => ({ slug }));
@@ -18,7 +15,6 @@ export async function generateMetadata({ params }) {
   const page = await getPage(slug);
   if (!page) return { title: "Sidan kunde inte hittas" };
 
-  // نستخدم اسم الـ story كـ title لو ما فيه بيانات SEO خاصة
   return {
     title: page.name,
   };
@@ -30,7 +26,6 @@ export default async function DynamicPage({ params }) {
 
   if (!page) notFound();
 
-  // نتوقع content_type === "page" مع body: Blocks[]
   const body = page.content?.body || [];
 
   return (

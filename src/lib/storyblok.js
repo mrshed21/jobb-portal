@@ -5,7 +5,6 @@ import FeatureGrid from "@/components/blocks/FeatureGrid";
 import TextSection from "@/components/blocks/TextSection";
 import CtaSection from "@/components/blocks/CtaSection";
 
-// تسجيل كل block component — Storyblok يربطها بالـ technical name
 const components = {
   hero: Hero,
   feature_item: FeatureItem,
@@ -77,9 +76,7 @@ export async function getDatasourceEntries(slug) {
 
 // ============ Generic Pages (blocks-based) ============
 
-/**
- * جلب أي صفحة عامة (content_type: page) عبر slug.
- */
+
 export async function getPage(slug) {
   try {
     const sbApi = getStoryblokApi();
@@ -93,9 +90,6 @@ export async function getPage(slug) {
   }
 }
 
-/**
- * جلب كل slugs الصفحات — للـ generateStaticParams.
- */
 export async function getPageSlugs() {
   const sbApi = getStoryblokApi();
   const { data } = await sbApi.get("cdn/stories", {
