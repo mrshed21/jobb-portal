@@ -1,4 +1,5 @@
 import { apiPlugin, storyblokInit, getStoryblokApi } from "@storyblok/react/rsc";
+import { unstable_noStore as noStore } from "next/cache";
 import Hero from "@/components/blocks/Hero";
 import FeatureItem from "@/components/blocks/FeatureItem";
 import FeatureGrid from "@/components/blocks/FeatureGrid";
@@ -17,16 +18,25 @@ storyblokInit({
   accessToken: process.env.STORYBLOK_DELIVERY_API_TOKEN,
   use: [apiPlugin],
   components,
-  apiOptions: {
-    region: "eu",
-  },
+  apiOptions: { region: "eu" },
 });
 
 const CONTENT_VERSION = process.env.STORYBLOK_VERSION || "published";
 
+/**
+ * في draft mode: نُلغي الـ cache كلياً — كل استدعاء يجلب طازج من Storyblok.
+ * في published mode: نترك Next.js يعمل الـ ISR العادي (SSG + revalidate 60).
+ */
+function bypassCacheIfDraft() {
+  if (CONTENT_VERSION === "draft") {
+    noStore();
+  }
+}
+
 // ============ Jobs ============
 
 export async function getJobs({ department } = {}) {
+  bypassCacheIfDraft();
   const sbApi = getStoryblokApi();
   const params = {
     starts_with: "jobs/",
@@ -42,6 +52,7 @@ export async function getJobs({ department } = {}) {
 }
 
 export async function getJob(slug) {
+  bypassCacheIfDraft();
   try {
     const sbApi = getStoryblokApi();
     const { data } = await sbApi.get(`cdn/stories/jobs/${slug}`, {
@@ -57,6 +68,7 @@ export async function getJob(slug) {
 // ============ Datasources ============
 
 export async function getDatasourceMap(slug) {
+  bypassCacheIfDraft();
   const sbApi = getStoryblokApi();
   const { data } = await sbApi.get("cdn/datasource_entries", {
     datasource: slug,
@@ -66,6 +78,7 @@ export async function getDatasourceMap(slug) {
 }
 
 export async function getDatasourceEntries(slug) {
+  bypassCacheIfDraft();
   const sbApi = getStoryblokApi();
   const { data } = await sbApi.get("cdn/datasource_entries", {
     datasource: slug,
@@ -74,10 +87,10 @@ export async function getDatasourceEntries(slug) {
   return data.datasource_entries;
 }
 
-// ============ Generic Pages (blocks-based) ============
-
+// ============ Pages (blocks-based) ============
 
 export async function getPage(slug) {
+  bypassCacheIfDraft();
   try {
     const sbApi = getStoryblokApi();
     const { data } = await sbApi.get(`cdn/stories/${slug}`, {
@@ -91,6 +104,8 @@ export async function getPage(slug) {
 }
 
 export async function getPageSlugs() {
+  // ملاحظة: لا نعمل bypassCacheIfDraft هنا لأن هذا يُستدعى فقط
+  // من generateStaticParams وقت الـ build (السيرفر يبني قائمة الـ slugs).
   const sbApi = getStoryblokApi();
   const { data } = await sbApi.get("cdn/stories", {
     content_type: "page",
