@@ -1,17 +1,16 @@
-/**
- * Hero block — عنوان كبير مع gradient اختياري.
- */
+import { storyblokEditable } from "@storyblok/react/rsc";
+
 export default function Hero({ blok }) {
   const isGradient = blok.variant === "gradient";
-
   return (
-    <section className="text-center py-16 md:py-24 px-6">
+    <section
+      {...storyblokEditable(blok)}
+      className="text-center py-16 md:py-24 px-6"
+    >
       <h1
         className={
           "text-4xl md:text-6xl font-semibold mb-6 leading-tight " +
-          (isGradient
-            ? "text-gradient"
-            : "text-white")
+          (isGradient ? "text-gradient" : "text-white")
         }
       >
         {blok.title}

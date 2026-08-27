@@ -1,8 +1,11 @@
-import { StoryblokServerRichText } from "@storyblok/react/rsc";
+import { StoryblokServerRichText, storyblokEditable } from "@storyblok/react/rsc";
 
 export default function TextSection({ blok }) {
   return (
-    <section className="py-12 md:py-16 px-6">
+    <section
+      {...storyblokEditable(blok)}
+      className="py-12 md:py-16 px-6"
+    >
       <div className="mx-auto max-w-3xl">
         <div className="glass-card p-8 md:p-10">
           {blok.heading && (

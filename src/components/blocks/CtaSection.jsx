@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { storyblokEditable } from "@storyblok/react/rsc";
 
 export default function CtaSection({ blok }) {
   return (
-    <section className="py-16 md:py-24 px-6">
+    <section
+      {...storyblokEditable(blok)}
+      className="py-16 md:py-24 px-6"
+    >
       <div className="mx-auto max-w-3xl">
         <div className="glass-card p-10 md:p-14 text-center">
           {blok.heading && (
