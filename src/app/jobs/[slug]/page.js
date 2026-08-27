@@ -4,7 +4,7 @@ import { StoryblokServerRichText } from "@storyblok/react/rsc";
 import { getJob, getJobs, getDatasourceMap } from "@/lib/storyblok";
 
 // ISR — page will be revalidated every 60 seconds on new visits, instead of waiting for a manual deploy
-export const revalidate = process.env.STORYBLOK_VERSION === "draft" ? 0 : 60;
+export const revalidate = 60;
 
 
 

@@ -2,7 +2,7 @@ import { getJobs, getDatasourceMap, getDatasourceEntries } from "@/lib/storyblok
 
 // ISR - page will be revalidated every 60 seconds on new visits, instead of waiting for a manual 
 // ISR = Incremental Static Regeneration
-export const revalidate = process.env.STORYBLOK_VERSION === "draft" ? 0 : 60;
+export const revalidate = 60;
 import JobCard from "@/components/JobCard";
 import DepartmentFilter from "@/components/DepartmentFilter";
 
