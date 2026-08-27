@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { StoryblokServerComponent, StoryblokLiveEditing } from "@storyblok/react/rsc";
 import { getPage, getPageSlugs } from "@/lib/storyblok";
 
-export const revalidate = 60;
+export const revalidate = process.env.STORYBLOK_VERSION === "draft" ? 0 : 60;
 
 export async function generateStaticParams() {
   const slugs = await getPageSlugs();
